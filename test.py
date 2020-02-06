@@ -1,6 +1,6 @@
 from lib import binToNum, bintransfo, filtre, huffman, msg, signalMod, wavWrite, openOutput, demodBin
 
-message = msg('message.txt')
+message = msg('C:\\Users\\ploui\\Documents\\A1\\Bloc4\\GitHub\\FSK-Modulation\\message.txt')
 asciiBin = bintransfo(message)
 huff = huffman(message)
 print(f'message huffman : {huff}')
