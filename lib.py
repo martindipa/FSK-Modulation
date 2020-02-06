@@ -2,6 +2,7 @@ from heapq import heappush, heappop, heapify
 from collections import defaultdict
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.io import wavfile
 
 
 def msg(directory):
@@ -150,3 +151,8 @@ def filtre(Signal, montxt):
     plt.show()
 
     return FFTi
+
+def wavWrite(data):
+    filename = 'output.wav'
+    rate = 44100
+    wavfile.write(filename, rate, np.float64(data))

@@ -1,10 +1,9 @@
-from lib import bintransfo, msg, huffman, signalMod, binToNum, filtre
-import demodulation
+from lib import binToNum, bintransfo, filtre, huffman, msg, signalMod, wavWrite
 
 message = msg('message.txt')
 asciiBin = bintransfo(message)
 huff = huffman(message)
 #sinNum = binToNum(asciiBin)
 sinMod = signalMod(asciiBin)
-filtre(sinMod, asciiBin)
-#waveMaker(sinMod, 'sinMod.wav')
+FFTi = filtre(sinMod, asciiBin)
+wavWrite(FFTi)
