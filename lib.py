@@ -151,7 +151,6 @@ def filtre(Signal, montxt):
 
     return FFTi
 
-def wavWrite(data):
-    filename = 'output.wav'
+def wavWrite(data, filename):
     rate = 44100
     wavfile.write(filename, rate, np.float64(data))
