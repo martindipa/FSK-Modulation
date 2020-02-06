@@ -3,8 +3,9 @@ import soundfile as sf
 import matplotlib.pyplot as plt
 def openOutput(filename):
     r = []
+    debit = 20
     data, Fe = sf.read(filename)
-    p = int(Fe*0.05)
+    p = int(Fe*1/debit)
     for j in range(int(len(data/p)-1)):
         f, FFT = periodogram(data[j*p:(j+1)*p], Fe)
         for i in range(len(FFT)):
@@ -20,5 +21,6 @@ def demodBin(r):
             codebin += '0'
         elif r[i] > 2050:
             codebin += '1'
+    
 
     return codebin

@@ -106,7 +106,7 @@ def signalMod(montxt):
         else:
             s.append(s2[i])
 
-    f3 = 200  # fréquence du signal
+    f3 = 100  # fréquence du signal
     s4 = np.sin(2*np.pi*f3*t)  # creation d'une sinusoide de Fréquence F
     S = s4 + s #Création d'un signal modulé avec bruit
 
@@ -132,7 +132,8 @@ def filtre(Signal, montxt):
 
     #Filtre
     FFT = np.fft.fft(S)
-    f = np.fft.fftfreq(len(montxt), 1/fe)
+    freq = np.fft.fftfreq(len(S), 1/fe)
+    f = freq[:int(len(S)/2)]
     for i in range(len(f)):
         if f[i] < fc:  # on coupe toutes les fréquences < 18000 Hz
             FFT[i] = 0.0
