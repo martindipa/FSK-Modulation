@@ -1,48 +1,26 @@
-import scipy.signal.signaltools as sigtool
-from scipy import signal
-from scipy.signal import butter, lfilter, blackman
-import wave
-import struct
-import numpy as np
+from scipy.signal import periodogram
+import soundfile as sf
 import matplotlib.pyplot as plt
-from scipy.fftpack import rfft, rfftfreq
 
-mark_f = 1200
-space_f = 2200
-Fs = 44100
-
-waveFile = wave.open("Sample4_160224_mono.wav", "r")
-length = waveFile.getnframes()
-sig = []
-for i in range(0, length):
-    waveData = waveFile.readframes(1)
-    data = struct.unpack("<h", waveData)
-    sig.append(data)
+r = []
+data, Fe = sf.read('output.wav')
+p = int(Fe*0.05)
+for j in range(int(len(data/p)-1)):
+    f, FFT = periodogram(data[j*p:(j+1)*p], Fe)
+    for i in range(len(FFT)):
+        if FFT[i] > 0.01:
+            r.append(f[i])
+            break
 
 
-# Bandpass filter mark and space frequencies:
+print(r)
+print(len(r))
+def demodBin(r):
+    codebin = ''
+    for i in range(len(r)):
+        if r[i] < 20250:
+            codebin += '0'
+        elif r[i] > 2050:
+            codebin += '1'
 
-low_bpass = signal.remez(5, [.1,.109,.11,.13,.131,.14],[0,1,0])
-mark_filtered = signal.lfilter(low_bpass, 1, sig)
-
-high_bpass = signal.remez(5, [.2,.209,.2100,.23,.231,.2400],[0,1,0])
-space_filtered = signal.lfilter(high_bpass, 1, sig)
-
-
-# Envelope detector on mark and space bandpass filtered signals:
-
-mark_env = np.abs(sigtool.hilbert(mark_filtered))
-space_env = np.abs(sigtool.hilbert(space_filtered))
-
-
-# Compare and decision:
-
-seq = range(0, len(mark_env))
-rx = []
-for i in seq:
-    if mark_env[i] > space_env[i]:
-        rx.append(1)
-    if mark_env[i] < space_env[i]:
-        rx.append(0)
-    if mark_env[i] == space_env[i]:
-        rx.append(0)
+    return codebin

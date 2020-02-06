@@ -72,7 +72,7 @@ def binToNum(codeBin):
 def signalMod(montxt):
     ##Création signal 1
     ##Signal que l'on va envoyer
-    f1 = 15  # fréquence du signal
+    f1 = 19000  # fréquence du signal
     fe = 44100  # fréquence d'échantillonnag
     debit = 20
     t = np.arange(0, len(montxt)/debit, 1/fe)  # creation de la base temps avec numpy
@@ -81,7 +81,7 @@ def signalMod(montxt):
 
     ##Création signal 2
     ##Signal modulant
-    f2 = 20  # fréquence du signal
+    f2 = 21500  # fréquence du signal
     debit = 20
     s2 = np.sin(2*np.pi*f2*t)  # creation d'une sinusoide de Fréquence F
 
@@ -91,7 +91,6 @@ def signalMod(montxt):
     b1 = [] #Init de tableau vide
     s = []
     fb = int(((len(montxt)/debit)*fe)/len(montxt))  # Nombre d'échantillon par bit
-
 
     ##Duplication d'echantillons par bits
     for i in range(0, len(b)):
@@ -107,7 +106,7 @@ def signalMod(montxt):
         else:
             s.append(s2[i])
 
-    f3 = 4  # fréquence du signal
+    f3 = 200  # fréquence du signal
     s4 = np.sin(2*np.pi*f3*t)  # creation d'une sinusoide de Fréquence F
     S = s4 + s #Création d'un signal modulé avec bruit
 
@@ -128,7 +127,7 @@ def filtre(Signal, montxt):
     S = Signal
     debit = 20
     fe = 44100
-    fc = 12
+    fc = 18000
     t = np.arange(0, len(montxt)/debit, 1/fe)
 
     #Filtre
