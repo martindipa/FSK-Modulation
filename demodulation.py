@@ -1,4 +1,4 @@
-from scipy.signal import periodogram
+
 import soundfile as sf
 import matplotlib.pyplot as plt
 def openOutput(filename):

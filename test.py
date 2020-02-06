@@ -1,5 +1,4 @@
-from lib import binToNum, bintransfo, filtre, huffman, msg, signalMod, wavWrite
-from demodulation import openOutput, demodBin
+from lib import binToNum, bintransfo, filtre, huffman, msg, signalMod, wavWrite, openOutput, demodBin
 
 message = msg('message.txt')
 asciiBin = bintransfo(message)
