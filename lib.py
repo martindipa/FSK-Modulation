@@ -177,7 +177,7 @@ def demodBin(r):
     for i in range(len(r)):
         if r[i] < 20250:
             codebin += '0'
-        elif r[i] > 2050:
+        elif r[i] > 20250:
             codebin += '1'
 
     return codebin
