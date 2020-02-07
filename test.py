@@ -11,3 +11,5 @@ wavWrite(FFTi,'output.wav')
 
 wavfile = openOutput('output.wav')
 print(f'signal démodulé : {demodBin(wavfile)}')
+
+input('Appuyez sur entrée pour éteindre le programme')
