@@ -14,13 +14,13 @@ def msg(directory):
     return txt
 
 
-def bintransfo(msgAscii):                   #Création d'une fonction bintransfo avec une variable msgAscii
-    msgBin = []                             #Création d'une liste vide msgBin
-    for i in range(0, len(msgAscii)):       #Initialisation d'une boucle pour
-        temp = format(ord(msgAscii[i]), '#010b')[2:]#Transformation de notre liste en binaire, de plus on enlève le préfixe
-        for i in range(0, len(temp)):       #Initialisation d'une autre boucle pour
-            msgBin.append(int(temp[i]))     #On intègre chaque bit à la liste msgBin de façon isolée
-    return msgBin  # On renvoie msgBin
+def bintransfo(msgAscii):
+    msgBin = []
+    for i in range(0, len(msgAscii)):
+        temp = format(ord(msgAscii[i]), '#010b')[2:]
+        for i in range(0, len(temp)):
+            msgBin.append(int(temp[i]))
+    return msgBin
 
 
 def encode(symb2freq):
@@ -36,6 +36,7 @@ def encode(symb2freq):
         heappush(heap, [lo[0] + hi[0]] + lo[1:] + hi[1:])
     return sorted(heappop(heap)[1:], key=lambda p: (len(p[-1]), p))
 
+
 def huffman(txt):
     chaine = {}
     symb2freq = defaultdict(int)
@@ -43,7 +44,6 @@ def huffman(txt):
         symb2freq[ch] += 1
     huff = encode(symb2freq)
     for p in huff:
-        #print("%s\t%s\t%s" % (p[0], symb2freq[p[0]], p[1]))
         chaine[p[0]] = p[1]
 
     result = ""
@@ -51,112 +51,95 @@ def huffman(txt):
         result += chaine[a]
     return result
 
+
 def binToNum(codeBin):
-    fe=44100                       #fréquence d'échantillonnage
-    debit=20
+    fe = 44100
+    debit = 20
     t = np.arange(0, len(codeBin)/debit, 1/fe)
-    list=[]
-    a=codeBin
+    list = []
+    a = codeBin
     fb = int(((len(codeBin)/debit)*fe)/len(codeBin))
     for i in range(0, len(a)):
         temp = str(a[i]) * fb
         for j in range(0, len(temp)):
             list.append(int(temp[j]))
 
-    plt.plot(t,list)                     #Affichage via la fonction plot de Matplotlib
-    plt.xlabel('Temps (s)')          #définition de l'axe des abscisses
-    plt.ylabel('Amplitude')          #définition de l'axe des ordonnées
-    plt.title ('Signal S=S1+S2',fontsize=14)
+    plt.plot(t, list)
+    plt.xlabel('Temps (s)')
+    plt.ylabel('Amplitude')
+    plt.title('Signal S=S1+S2', fontsize=14)
     plt.grid()
-    plt.show()                          #affichage d
+    plt.show()
 
 
 def signalMod(montxt):
-    ##Création signal 1
-    ##Signal que l'on va envoyer
-    f1 = 19000  # fréquence du signal
-    fe = 44100  # fréquence d'échantillonnag
+    f1 = 19000
+    fe = 44100
     debit = 20
-    t = np.arange(0, len(montxt)/debit, 1/fe)  # creation de la base temps avec numpy
-    s1 = np.sin(2*np.pi*f1*t)  # creation d'une sinusoide de Fréquence F
-
-
-    ##Création signal 2
-    ##Signal modulant
-    f2 = 21500  # fréquence du signal
+    t = np.arange(0, len(montxt)/debit, 1/fe)
+    s1 = np.sin(2*np.pi*f1*t)
+    f2 = 21500
     debit = 20
-    s2 = np.sin(2*np.pi*f2*t)  # creation d'une sinusoide de Fréquence F
-
-
-    ##Def de variables
+    s2 = np.sin(2*np.pi*f2*t)
     b = montxt
-    b1 = [] #Init de tableau vide
-    s = []
-    fb = int(((len(montxt)/debit)*fe)/len(montxt))  # Nombre d'échantillon par bit
+    f3 = 100
+    s4 = np.sin(2*np.pi*f3*t)
+    S = s4 + s
+    fb = int(((len(montxt)/debit)*fe)/len(montxt))
 
-    ##Duplication d'echantillons par bits
+    b1 = []
+    s = []
     for i in range(0, len(b)):
         temp = str(b[i]) * fb
         for i in range(0, len(temp)):
             b1.append(int(temp[i]))
 
-
-    ##Selection entre 2 signaux pour moduler
     for i in range(0, len(b1)):
         if b1[i] == 0:
             s.append(s1[i])
         else:
             s.append(s2[i])
 
-    f3 = 100  # fréquence du signal
-    s4 = np.sin(2*np.pi*f3*t)  # creation d'une sinusoide de Fréquence F
-    S = s4 + s #Création d'un signal modulé avec bruit
-
-    ##Affichage
-    plt.plot(t, S)  # Affichage via la fonction plot de Matplotlib
-    plt.title('Signal émis modulé')
-    plt.xlabel('Temps (s)')  # définition de l'axe des abscisses
-    plt.ylabel('Amplitude')  # définition de l'axe des ordonnées
+    plt.plot(t, S)
+    plt.title('Modulated signal')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Amplitude')
     plt.grid()
     plt.show()
-
     return S
 
 
 def filtre(Signal, montxt):
-
-    #Init variables
     S = Signal
     debit = 20
     fe = 44100
     fc = 18000
     t = np.arange(0, len(montxt)/debit, 1/fe)
-
-    #Filtre
     FFT = np.fft.fft(S)
     freq = np.fft.fftfreq(len(S), 1/fe)
     f = freq[:int(len(S)/2)]
+
     for i in range(len(f)):
-        if f[i] < fc:  # on coupe toutes les fréquences < 18000 Hz
+        if f[i] < fc:
             FFT[i] = 0.0
 
-    #FFT Inverse
     FFTi = np.fft.ifft(FFT)
 
-    #Affichage
-    plt.plot(t, FFTi)  # Affichage via la fonction plot de Matplotlib
-    plt.xlabel('Temps (s)')  # définition de l'axe des abscisses
-    plt.ylabel('Module')  # définition de l'axe des ordonnées
+    plt.plot(t, FFTi)
+    plt.xlabel('Time (s)')
+    plt.ylabel('Module')
     plt.xlim(0)
     plt.grid()
-    plt.title('signal filtré S(t)', fontsize=14)
+    plt.title('filtered signal', fontsize=14)
     plt.show()
 
     return FFTi
 
+
 def wavWrite(data, filename):
     rate = 44100
     wavfile.write(filename, rate, np.float64(data))
+
 
 def openOutput(filename):
     r = []
